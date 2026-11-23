@@ -64,18 +64,72 @@
     <div id="main-content" class="opacity-0 transition-opacity duration-1000">
 
         <!-- HERO SECTION -->
-        <header class="relative h-screen flex flex-col items-center justify-center text-center px-6 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('./foto/Cover.jpeg');">
-            <div class="relative z-10 space-y-4 text-white max-w-2xl">
-                <p class="text-xs md:text-sm uppercase tracking-[0.4em] text-gold">The Wedding Celebration</p>
-                <h1 class="font-script text-7xl md:text-8xl text-gold drop-shadow-md">Robbi Fadillah Spd & Mita Amelia Devi</h1>
-                <p class="text-sm md:text-base font-serif italic text-gray-200">"Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri..."</p>
-                <div class="pt-6">
-                    <span class="inline-block border-y border-gold/60 py-2 px-6 text-sm tracking-widest uppercase text-gold font-light">
-                        Minggu, 15 Desember 2026
-                    </span>
-                </div>
-            </div>
-        </header>
+        
+		<!-- HERO SECTION -->
+		<header
+		    class="relative h-screen flex flex-col items-center justify-center
+		           text-center px-6 bg-cover bg-center overflow-hidden"
+		    style="background-image: url('./foto/Cover.jpeg');">
+		
+		    <!-- OVERLAY GRADIENT -->
+		    <div class="absolute inset-0 z-0"
+		         style="background: linear-gradient(
+		             to bottom,
+		             rgba(20,16,14,0.20) 0%,
+		             rgba(20,16,14,0.38) 45%,
+		             rgba(20,16,14,0.62) 100%
+		         );">
+		    </div>
+		
+		    <!-- HERO CONTENT -->
+		    <div class="relative z-10 space-y-6 text-white max-w-2xl mx-auto">
+		
+		        <p class="text-xs md:text-sm uppercase tracking-[0.4em]"
+		           style="color:#E8D2AE; text-shadow:0 2px 8px rgba(0,0,0,0.8);">
+		            The Wedding Celebration
+		        </p>
+		
+		        <h1 class="font-script text-6xl md:text-8xl"
+		            style="color:#E8C995;
+		                   text-shadow:0 3px 12px rgba(0,0,0,0.75);">
+		            Robbi Fadillah Spd & Mita Amelia Devi
+		        </h1>
+		
+		        <!-- AYAT -->
+		        <div class="max-w-xl mx-auto px-5 py-4 rounded-xl"
+		             style="background:rgba(30,24,20,0.22);
+		                    backdrop-filter:blur(3px);
+		                    border:1px solid rgba(232,201,149,0.25);">
+		
+		            <p class="text-sm md:text-lg font-serif italic leading-relaxed"
+		               style="color:#FFF9EF;
+		                      text-shadow:0 2px 6px rgba(0,0,0,0.85);">
+		                "Dan di antara tanda-tanda kebesaran-Nya ialah Dia
+		                menciptakan pasangan-pasangan untukmu dari jenismu sendiri..."
+		            </p>
+		
+		        </div>
+		
+		        <!-- TANGGAL -->
+		        <div class="pt-3">
+		
+		            <span class="inline-block py-3 px-7 text-xs md:text-sm
+		                         tracking-[0.2em] uppercase rounded-full"
+		                  style="color:#F5E4C8;
+		                         background:rgba(30,24,20,0.30);
+		                         border:1px solid rgba(232,201,149,0.75);
+		                         text-shadow:0 2px 5px rgba(0,0,0,0.8);
+		                         box-shadow:0 4px 15px rgba(0,0,0,0.15);">
+		
+		                Minggu, 20 Desember 2026
+		
+		            </span>
+		
+		        </div>
+		
+		    </div>
+		</header>
+
 
         <!-- PASANGAN PENGANTIN -->
         <section class="py-20 px-6 max-w-4xl mx-auto text-center">
@@ -788,6 +842,7 @@
     </script>
 </body>
 </html>
+
 
 
 
