@@ -48,15 +48,39 @@
             <span class="text-xs uppercase tracking-[0.3em] text-gold">The Wedding Of</span>
             <h1 class="font-script text-6xl md:text-7xl text-gold">Robbi Fadillah Spd & Mita Amelia Devi</h1>
             <p class="text-sm font-light text-gray-300">Kepada Yth. Bapak/Ibu/Saudara/i,</p>
-            <div class="py-2 px-6 bg-white/10 backdrop-blur-sm rounded-full inline-block border border-gold/30">
-                <!-- Elemen tempat nama tamu akan tampil -->
-                <span id="guestNameDisplay" class="text-base font-semibold tracking-wide text-gold capitalize">Tamu Undangan</span>
-            </div>
-            <div class="pt-4">
-                <button onclick="openInvitation()" class="px-8 py-3 bg-gold hover:bg-darkgold text-softdark font-medium rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 mx-auto uppercase tracking-wider text-xs">
-                    <i class="fa-solid fa-envelope-open"></i> Buka Undangan
-                </button>
-            </div>
+            
+			<!-- NAMA TAMU -->
+			<div class="py-3 px-6 bg-white/10 backdrop-blur-sm rounded-full inline-flex items-center justify-center gap-3 border border-gold/30">
+			
+			    <!-- Loading Spinner -->
+			    <i id="guestLoading"
+			       class="fa-solid fa-circle-notch fa-spin text-gold text-sm"></i>
+			
+			    <!-- Nama Tamu -->
+			    <span id="guestNameDisplay"
+			          class="text-base font-semibold tracking-wide text-gold capitalize">
+			        Memuat data tamu...
+			    </span>
+			
+			</div>
+			
+			<!-- TOMBOL BUKA UNDANGAN -->
+			<div class="pt-4">
+			
+			    <button
+			        id="invitationButton"
+			        onclick="openInvitation()"
+			        disabled
+			        class="px-8 py-3 bg-gold text-softdark font-medium rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 mx-auto uppercase tracking-wider text-xs opacity-50 cursor-not-allowed">
+			
+			        <i class="fa-solid fa-lock" id="invitationButtonIcon"></i>
+			
+			        <span id="invitationButtonText">Memuat...</span>
+			
+			    </button>
+			
+			</div>
+
         </div>
     </div>
 
@@ -494,6 +518,7 @@
 	let currentGuestName = "Tamu Undangan";
 	let openingRecorded = false;
 	
+	
 	window.addEventListener("DOMContentLoaded", function () {
 	
 	    const params = new URLSearchParams(window.location.search);
@@ -501,47 +526,99 @@
 	    currentGuestId = params.get("id") || "";
 	
 	    if (!currentGuestId) {
+	
+	        document.getElementById("guestNameDisplay").textContent =
+	            "ID tamu tidak ditemukan";
+	
+	        document.getElementById("guestLoading").classList.add("hidden");
+	
+	        document.getElementById("invitationButtonText").textContent =
+	            "Undangan Tidak Tersedia";
+	
 	        return;
 	    }
 	
 	    loadGuestInfo(currentGuestId);
 	
 	});
+
 	
 	
 	// ========================================
 	// 2. AMBIL NAMA TAMU DARI GOOGLE SHEETS
 	// ========================================
 	
+	
 	function loadGuestInfo(id) {
 	
 	    const script = document.createElement("script");
 	
-	    window.__guestInfoCallback = function(response) {
+	    const nameDisplay = document.getElementById("guestNameDisplay");
+	    const loadingIcon = document.getElementById("guestLoading");
+	    const button = document.getElementById("invitationButton");
+	    const buttonText = document.getElementById("invitationButtonText");
+	    const buttonIcon = document.getElementById("invitationButtonIcon");
 	
+	    let completed = false;
+	
+	    function showError(message) {
+	        if (completed) return;
+	
+	        completed = true;
+	        clearTimeout(loadTimeout);
 	        script.remove();
 	
+	        nameDisplay.textContent = message;
+	        loadingIcon.classList.remove("fa-spin");
+	        loadingIcon.classList.remove("fa-circle-notch");
+	        loadingIcon.classList.add("fa-circle-exclamation");
+	        loadingIcon.classList.add("text-red-400");
+	
+	        button.disabled = true;
+	        buttonText.textContent = "Data Tidak Tersedia";
+	        buttonIcon.className = "fa-solid fa-lock";
+	    }
+	
+	    window.__guestInfoCallback = function(response) {
+	
+	        if (completed) return;
+	
 	        if (!response || !response.success || !response.guest) {
-	            console.error("Data tamu tidak ditemukan.");
+	            showError("Data tamu tidak ditemukan");
 	            return;
 	        }
 	
+	        completed = true;
+	        clearTimeout(loadTimeout);
+	        script.remove();
+	
 	        currentGuestName = response.guest.name || "Tamu Undangan";
 	
-	        // Tampilkan nama di cover
-	        document.getElementById("guestNameDisplay").textContent =
-	            currentGuestName;
+	        // Tampilkan nama tamu
+	        nameDisplay.textContent = currentGuestName;
 	
-	        // Isi otomatis form RSVP
-	        document.getElementById("guestName").value =
-	            currentGuestName;
+	        // Hilangkan spinner
+	        loadingIcon.classList.add("hidden");
 	
+	        // Aktifkan tombol
+	        button.disabled = false;
+	        button.classList.remove("opacity-50", "cursor-not-allowed");
+	        button.classList.add("hover:bg-darkgold", "cursor-pointer");
+	
+	        buttonIcon.className = "fa-solid fa-envelope-open";
+	        buttonText.textContent = "Buka Undangan";
+	
+	        // Isi otomatis nama pada form RSVP
+	        document.getElementById("guestName").value = currentGuestName;
 	    };
 	
 	    script.onerror = function() {
-	        script.remove();
-	        console.error("Gagal mengambil data tamu.");
+	        showError("Gagal memuat data tamu");
 	    };
+	
+	    const loadTimeout = setTimeout(function() {
+	        showError("Koneksi lambat, silakan muat ulang");
+	    }, 15000);
 	
 	    script.src =
 	        GUEST_API +
@@ -551,8 +628,8 @@
 	        "&_=" + Date.now();
 	
 	    document.body.appendChild(script);
-	
 	}
+
 	
 	
 	// ========================================
@@ -903,6 +980,7 @@
     </script>
 </body>
 </html>
+
 
 
 
