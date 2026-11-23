@@ -302,30 +302,77 @@
 
 		
         <!-- GALERI FOTO -->
-        <section class="py-20 bg-gray-50 px-6">
-            <div class="max-w-4xl mx-auto text-center space-y-4 mb-16">
-                <span class="text-xs uppercase tracking-[0.3em] text-gold">Momen Kebersamaan</span>
-                <h2 class="font-serif text-4xl md:text-5xl font-semibold">Galeri Kami</h2>
-            </div>
+        
+		<!-- GALERI FOTO -->
+		<section class="py-20 px-5 md:px-6 bg-[#F8F5EF]">
+		
+		    <div class="max-w-5xl mx-auto text-center space-y-4 mb-12">
+		        <span class="text-xs uppercase tracking-[0.3em] text-gold">
+		            Momen Kebersamaan
+		        </span>
+		
+		        <h2 class="font-serif text-4xl md:text-5xl font-semibold">
+		            Galeri Kami
+		        </h2>
+		
+		        <p class="text-gray-500 text-sm max-w-md mx-auto">
+		            Setiap momen memiliki cerita, dan setiap cerita menjadi kenangan indah.
+		        </p>
+		    </div>
+		
+		    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-5">
+		
+		        <!-- FOTO 1 -->
+		        <div class="gallery-item">
+		            <img src="./foto/foto1.jpeg" alt="Momen 1">
+		        </div>
+		
+		        <!-- FOTO 2 -->
+		        <div class="gallery-item">
+		            <img src="./foto/foto2.jpeg" alt="Momen 2">
+		        </div>
+		
+		        <!-- FOTO 3 -->
+		        <div class="gallery-item">
+		            <img src="./foto/foto3.jpeg" alt="Momen 3">
+		        </div>
+		
+		        <!-- FOTO 4 -->
+		        <div class="gallery-item">
+		            <img src="./foto/foto4.jpeg" alt="Momen 4">
+		        </div>
+		
+		        <!-- FOTO 5 -->
+		        <div class="gallery-item">
+		            <img src="./foto/foto5.jpeg" alt="Momen 5">
+		        </div>
+		
+		    </div>
+		
+		</section>
+		
+		<style>
+		    .gallery-item {
+		        overflow: hidden;
+		        border-radius: 14px;
+		        background: #eee9df;
+		        box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+		        position: relative;
+		    }
+		
+		    .gallery-item img {
+		        display: block;
+		        width: 100%;
+		        height: auto;
+		        object-fit: contain;
+		        transition: transform 0.5s ease;
+		    }
+		
+		    .gallery-item:hover img {
+		        transform: scale(1.04);
+		    }
+		</style>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                <div class="overflow-hidden rounded-xl shadow-md h-60">
-                    <img src="./foto/foto1.jpeg" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-                <div class="overflow-hidden rounded-xl shadow-md h-60">
-                    <img src="./foto/foto2.jpeg" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-                <div class="overflow-hidden rounded-xl shadow-md h-60 col-span-2 md:col-span-1">
-                    <img src="./foto/foto3.jpeg" alt="Gallery 3" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-				<div class="overflow-hidden rounded-xl shadow-md h-60 col-span-2 md:col-span-1">
-                    <img src="./foto/foto4.jpeg" alt="Gallery 3" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-				<div class="overflow-hidden rounded-xl shadow-md h-60 col-span-2 md:col-span-1">
-                    <img src="./foto/foto5.jpeg" alt="Gallery 3" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                </div>
-            </div>
-        </section>
 
         <!-- UCAPAN & DOA (RSVP) -->
         <section class="py-20 px-6 max-w-3xl mx-auto">
@@ -856,6 +903,7 @@
     </script>
 </body>
 </html>
+
 
 
 
