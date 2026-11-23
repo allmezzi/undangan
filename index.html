@@ -667,10 +667,11 @@
 			}
 
 			const data = {
-				name: name,
-				presence: presence,
-				message: message,
-				website: website
+			  name: name,
+			  presence: presence,
+			  message: message,
+			  guestId: currentGuestId || "",
+			  website: website
 			};
 
 			button.disabled = true;
