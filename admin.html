@@ -297,6 +297,7 @@ button:disabled {
           <tr class="border-b text-stone-500">
             <th class="py-3">Nama / ID</th>
             <th>RSVP</th>
+            <th>Pesan</th>
             <th>Waktu Buka</th>
             <th>Link / WhatsApp</th>
             <th>Aksi</th>
@@ -678,65 +679,66 @@ function render() {
 
 
     return `
-      <tr class="border-b align-top">
-
-        <td class="py-3">
-          <b>${esc(guest.name)}</b>
-          <div class="text-stone-400">
-            ${esc(guest.id)} · ${esc(guest.phone || "-")}
-          </div>
-        </td>
-
-        <td>
-          <span class="badge ${statusClass}">
-            ${esc(guest.presence || "Belum Merespons")}
-          </span>
-        </td>
-
-        <td>${openedText}</td>
-
-        <td>
-          <button
-            type="button"
-            class="text-blue-700 underline"
-            data-action="copy"
-            data-id="${esc(guest.id)}">
-            Salin link
-          </button>
-          ${waLink}
-        </td>
-
-        <td class="whitespace-nowrap">
-
-          <button
-            type="button"
-            class="btn muted"
-            data-action="edit"
-            data-id="${esc(guest.id)}">
-            Edit
-          </button>
-
-          <button
-            type="button"
-            class="btn muted text-red-600"
-            data-action="delete"
-            data-id="${esc(guest.id)}">
-            Hapus
-          </button>
-
-        </td>
-
-      </tr>
-    `;
-
-  }).join("") ||
-    `<tr>
-      <td colspan="5" class="text-center py-8 text-stone-400">
-        Tidak ada data.
+    <tr class="border-b align-top">
+  
+      <td class="py-3">
+        <b>${esc(guest.name)}</b>
+        <div class="text-stone-400">
+          ${esc(guest.id)} · ${esc(guest.phone || "-")}
+        </div>
       </td>
-    </tr>`;
-
-}
+  
+      <td>
+        <span class="badge ${statusClass}">
+          ${esc(guest.presence || "Belum Merespons")}
+        </span>
+      </td>
+  
+      <td class="py-3 max-w-xs">
+        ${
+          guest.message
+            ? `<div class="bg-amber-50 border border-amber-100 rounded-lg p-2 text-stone-700 whitespace-pre-wrap break-words">${esc(guest.message)}</div>`
+            : `<span class="text-stone-400 italic">Belum ada pesan</span>`
+        }
+      </td>
+  
+      <td>
+        ${openedText}
+      </td>
+  
+      <td>
+        <button
+          type="button"
+          class="text-blue-700 underline"
+          data-action="copy"
+          data-id="${esc(guest.id)}">
+          Salin link
+        </button>
+        ${waLink}
+      </td>
+  
+      <td class="whitespace-nowrap">
+  
+        <button
+          type="button"
+          class="btn muted"
+          data-action="edit"
+          data-id="${esc(guest.id)}">
+          Edit
+        </button>
+  
+        <button
+          type="button"
+          class="btn muted text-red-600"
+          data-action="delete"
+          data-id="${esc(guest.id)}">
+          Hapus
+        </button>
+  
+      </td>
+  
+    </tr>
+  `;
 
 
 // =====================================
