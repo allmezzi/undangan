@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width,initial-scale=1">
 				<title>Admin Undangan</title>
-				<script src="https://cdn.tailwindcss.com"/>
+				<script src="https://cdn.tailwindcss.com"></script>
 				<style>body{font-family:Arial,sans-serif;background:#f8f7f4;color:#292524}.panel{background:white;border:1px solid #eee7dc;border-radius:15px}.btn{border-radius:9px;padding:9px 13px;font-size:12px;font-weight:bold}.primary{background:#c5a880;color:#292524}.muted{background:#f3f0eb}.badge{border-radius:20px;padding:4px 8px;font-size:10px;font-weight:bold}</style>
 			</head>
 			<body>
@@ -22,11 +22,11 @@
 						<p class="text-xs text-stone-500 my-2">Masukkan password yang disimpan di Apps Script Script Properties.</p>
 						<input id="password" type="password" class="border rounded-lg w-full p-3 text-sm" placeholder="Password admin">
 							<button onclick="login()" class="btn primary w-full mt-3">Masuk</button>
-							<p id="loginMsg" class="text-xs text-red-600 mt-3"/>
+							<p id="loginMsg" class="text-xs text-red-600 mt-3"></p>
 						</section>
 						<section id="app" class="hidden">
 							<div class="flex justify-between items-center my-4">
-								<p id="updated" class="text-xs text-stone-500"/>
+								<p id="updated" class="text-xs text-stone-500"></p>
 								<div class="flex gap-2">
 									<button class="btn muted" onclick="load()">Refresh</button>
 									<button class="btn muted" onclick="logout()">Keluar</button>
@@ -40,7 +40,7 @@
 								<div class="panel p-4">
 									<p class="text-xs text-stone-500">Sudah Membuka</p>
 									<b id="opened" class="text-3xl text-green-700">0</b>
-									<p id="rate" class="text-xs text-stone-400"/>
+									<p id="rate" class="text-xs text-stone-400"></p>
 								</div>
 								<div class="panel p-4">
 									<p class="text-xs text-stone-500">Hadir</p>
@@ -73,7 +73,7 @@
 										<section class="panel p-5 lg:col-span-2">
 											<h2 class="font-bold mb-1">Tambah Banyak Tamu</h2>
 											<p class="text-xs text-stone-500 mb-2">Satu tamu per baris. Format opsional: Nama | Nomor WhatsApp.</p>
-											<textarea id="bulk" rows="5" class="border rounded-lg p-3 w-full text-sm" placeholder="Budi&#10;Andi | 628123456789&#10;Siti"/>
+											<textarea id="bulk" rows="5" class="border rounded-lg p-3 w-full text-sm" placeholder="Budi&#10;Andi | 628123456789&#10;Siti"></textarea>
 											<div class="text-right mt-2">
 												<button class="btn primary" onclick="bulkAdd()">Tambah Daftar</button>
 											</div>
@@ -101,7 +101,7 @@
 													<option value="no">Belum membuka</option>
 												</select>
 											</div>
-											<p id="count" class="text-xs text-stone-500 mb-2"/>
+											<p id="count" class="text-xs text-stone-500 mb-2"></p>
 											<div class="overflow-x-auto">
 												<table class="w-full min-w-[850px] text-xs text-left">
 													<thead>
@@ -113,11 +113,11 @@
 															<th>Aksi</th>
 														</tr>
 													</thead>
-													<tbody id="rows"/>
+													<tbody id="rows"></tbody>
 												</table>
 											</div>
 										</section>
-										<p id="msg" class="text-xs text-center text-stone-500 mt-4"/>
+										<p id="msg" class="text-xs text-center text-stone-500 mt-4"></p>
 									</section>
 								</main>
 								<script>
