@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="id">
+	<head>
+		<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width,initial-scale=1">
+				<title>Admin Undangan</title>
+				<script src="https://cdn.tailwindcss.com"/>
+				<style>body{font-family:Arial,sans-serif;background:#f8f7f4;color:#292524}.panel{background:white;border:1px solid #eee7dc;border-radius:15px}.btn{border-radius:9px;padding:9px 13px;font-size:12px;font-weight:bold}.primary{background:#c5a880;color:#292524}.muted{background:#f3f0eb}.badge{border-radius:20px;padding:4px 8px;font-size:10px;font-weight:bold}</style>
+			</head>
+			<body>
+				<main class="max-w-7xl mx-auto p-4 md:p-8">
+					<header class="flex flex-wrap justify-between items-center gap-3 mb-7">
+						<div>
+							<p class="text-xs uppercase tracking-widest text-amber-800">Wedding Invitation</p>
+							<h1 class="text-3xl font-bold">Guest Management</h1>
+							<p class="text-sm text-stone-500">Kelola tamu, RSVP, dan status pembukaan undangan.</p>
+						</div>
+						<a href="./" target="_blank" class="btn muted">Lihat Undangan ↗</a>
+					</header>
+					<section id="login" class="panel p-5 max-w-md mx-auto mt-12">
+						<h2 class="font-bold text-lg">Login Admin</h2>
+						<p class="text-xs text-stone-500 my-2">Masukkan password yang disimpan di Apps Script Script Properties.</p>
+						<input id="password" type="password" class="border rounded-lg w-full p-3 text-sm" placeholder="Password admin">
+							<button onclick="login()" class="btn primary w-full mt-3">Masuk</button>
+							<p id="loginMsg" class="text-xs text-red-600 mt-3"/>
+						</section>
+						<section id="app" class="hidden">
+							<div class="flex justify-between items-center my-4">
+								<p id="updated" class="text-xs text-stone-500"/>
+								<div class="flex gap-2">
+									<button class="btn muted" onclick="load()">Refresh</button>
+									<button class="btn muted" onclick="logout()">Keluar</button>
+								</div>
+							</div>
+							<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Total Tamu</p>
+									<b id="total" class="text-3xl">0</b>
+								</div>
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Sudah Membuka</p>
+									<b id="opened" class="text-3xl text-green-700">0</b>
+									<p id="rate" class="text-xs text-stone-400"/>
+								</div>
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Hadir</p>
+									<b id="hadir" class="text-3xl text-green-700">0</b>
+								</div>
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Berhalangan</p>
+									<b id="berhalangan" class="text-3xl text-red-600">0</b>
+								</div>
+							</div>
+							<div class="grid grid-cols-2 gap-3 mb-6">
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Belum Membuka</p>
+									<b id="notOpened" class="text-2xl">0</b>
+								</div>
+								<div class="panel p-4">
+									<p class="text-xs text-stone-500">Belum Merespons</p>
+									<b id="noResponse" class="text-2xl">0</b>
+								</div>
+							</div>
+							<div class="grid lg:grid-cols-3 gap-4 mb-6">
+								<section class="panel p-5">
+									<h2 class="font-bold mb-3">Tambah Satu Tamu</h2>
+									<form id="addForm" onsubmit="addGuest(event)" class="space-y-3">
+										<input id="newName" required maxlength="80" class="border rounded-lg p-2.5 w-full text-sm" placeholder="Nama tamu">
+											<input id="newPhone" class="border rounded-lg p-2.5 w-full text-sm" placeholder="No. WhatsApp (628...)">
+												<button class="btn primary w-full">Tambah Tamu</button>
+											</form>
+										</section>
+										<section class="panel p-5 lg:col-span-2">
+											<h2 class="font-bold mb-1">Tambah Banyak Tamu</h2>
+											<p class="text-xs text-stone-500 mb-2">Satu tamu per baris. Format opsional: Nama | Nomor WhatsApp.</p>
+											<textarea id="bulk" rows="5" class="border rounded-lg p-3 w-full text-sm" placeholder="Budi&#10;Andi | 628123456789&#10;Siti"/>
+											<div class="text-right mt-2">
+												<button class="btn primary" onclick="bulkAdd()">Tambah Daftar</button>
+											</div>
+										</section>
+									</div>
+									<section class="panel p-5">
+										<div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+											<div>
+												<h2 class="font-bold text-lg">Daftar Tamu</h2>
+												<p class="text-xs text-stone-500">Link undangan otomatis berdasarkan ID.</p>
+											</div>
+											<button class="btn muted" onclick="exportCSV()">Export CSV</button>
+										</div>
+										<div class="grid md:grid-cols-3 gap-2 mb-3">
+											<input id="search" oninput="render()" class="border rounded-lg p-2.5 text-sm" placeholder="Cari nama / ID / nomor">
+												<select id="rsvp" onchange="render()" class="border rounded-lg p-2.5 text-sm">
+													<option value="">Semua status RSVP</option>
+													<option>Hadir</option>
+													<option>Berhalangan</option>
+													<option>Belum Merespons</option>
+												</select>
+												<select id="openedFilter" onchange="render()" class="border rounded-lg p-2.5 text-sm">
+													<option value="">Semua status buka</option>
+													<option value="yes">Sudah membuka</option>
+													<option value="no">Belum membuka</option>
+												</select>
+											</div>
+											<p id="count" class="text-xs text-stone-500 mb-2"/>
+											<div class="overflow-x-auto">
+												<table class="w-full min-w-[850px] text-xs text-left">
+													<thead>
+														<tr class="border-b text-stone-500">
+															<th class="py-3">Nama / ID</th>
+															<th>RSVP</th>
+															<th>Waktu Buka</th>
+															<th>Link / WhatsApp</th>
+															<th>Aksi</th>
+														</tr>
+													</thead>
+													<tbody id="rows"/>
+												</table>
+											</div>
+										</section>
+										<p id="msg" class="text-xs text-center text-stone-500 mt-4"/>
+									</section>
+								</main>
+								<script>
+const API="https://script.google.com/macros/s/AKfycbwP5yhLPxUK8_Ue0sEw1Rs2QIBrmRnuHPvn2sWfSzBiSLEiE5BCnvVhFPRB_OdzN2OU/exec";
+const INVITE="https://allmezzi.github.io/undangan/";
+let key="",data=[];
+function login(){key=document.getElementById("password").value;if(!key)return;document.getElementById("loginMsg").textContent="Memeriksa akses...";load(true);}
+function logout(){key="";data=[];document.getElementById("password").value="";document.getElementById("app").classList.add("hidden");document.getElementById("login").classList.remove("hidden");}
+function load(first=false){window.__adminCallback=d=>{if(!d||!d.success){document.getElementById(first?"loginMsg":"msg").textContent=(d&&d.message)||"Akses gagal";return;}data=d.guests||[];document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");let s=d.stats||{};["total","opened","hadir","berhalangan","notOpened","noResponse"].forEach(k=>document.getElementById(k).textContent=s[k]||0);document.getElementById("rate").textContent=(s.openRate||0)+"% tingkat buka";document.getElementById("updated").textContent="Diperbarui "+new Date().toLocaleString("id-ID");render();};let x=document.createElement("script");x.src=API+"?action=adminList&key="+encodeURIComponent(key)+"&callback=window.__adminCallback&_="+Date.now();x.onload=()=>x.remove();x.onerror=()=>{document.getElementById(first?"loginMsg":"msg").textContent="Gagal terhubung ke Apps Script";x.remove();};document.body.appendChild(x);}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function link(g){return INVITE+"?id="+encodeURIComponent(g.id);}
+function norm(p){let n=String(p||"").replace(/\D/g,"");if(n.startsWith("0"))n="62"+n.slice(1);else if(n.startsWith("8"))n="62"+n;return n;}
+function render(){let q=document.getElementById("search").value.toLowerCase().trim(),r=document.getElementById("rsvp").value,o=document.getElementById("openedFilter").value;let a=data.filter(g=>(!q||[g.id,g.name,g.phone].some(v=>String(v||"").toLowerCase().includes(q)))&&(!r||g.presence===r)&&(!o||(o==="yes"?!!g.openedAt:!g.openedAt)));document.getElementById("count").textContent=a.length+" dari "+data.length+" tamu";document.getElementById("rows").innerHTML=a.map(g=>{let c=g.presence==="Hadir"?"bg-green-100 text-green-700":g.presence==="Berhalangan"?"bg-red-100 text-red-700":"bg-stone-100 text-stone-600",wa=norm(g.phone),w=wa?'<a class="text-green-700 underline block mt-1" target="_blank" rel="noopener" href="https://wa.me/'+encodeURIComponent(wa)+'?text='+encodeURIComponent(" Halo"+g.name+" , berikut link undangan kami:"+link(g))+'">WhatsApp</a>':'<span class="text-stone-400 block mt-1">No WA kosong</span>';return '<tr class="border-b align-top">
+												<td class="py-3">
+													<b>'+esc(g.name)+'</b>
+													<div class="text-stone-400">'+esc(g.id)+' · '+esc(g.phone||"-")+'</div>
+												</td>
+												<td>
+													<span class="badge '+c+'">'+esc(g.presence)+'</span>
+												</td>
+												<td>'+(g.openedAt?esc(new Date(g.openedAt).toLocaleString("id-ID")):"Belum membuka")+'</td>
+												<td>
+													<button class="text-blue-700 underline" onclick="copyLink(\''+esc(g.id)+'\')">Salin link</button>'+w+'</td>
+												<td>
+													<button class="btn muted" onclick="edit(\''+esc(g.id)+'\')">Edit</button>
+													<button class="btn muted text-red-600" onclick="del(\''+esc(g.id)+'\')">Hapus</button>
+												</td>
+											</tr>';}).join("")||'<tr>
+												<td colspan="5" class="text-center py-8 text-stone-400">Tidak ada data.</td>
+											</tr>';}
+async function copyLink(id){let g=data.find(x=>x.id===id);if(!g)return;try{await navigator.clipboard.writeText(link(g));document.getElementById("msg").textContent="Link disalin.";}catch(e){prompt("Salin link",link(g));}}
+async function post(p,t){p.key=key;document.getElementById("msg").textContent="Mengirim...";try{await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)});document.getElementById("msg").textContent=t+" Memuat ulang...";setTimeout(()=>load(),1800);}catch(e){document.getElementById("msg").textContent="Koneksi gagal.";}}
+function addGuest(e){e.preventDefault();post({action:"addGuest",name:document.getElementById("newName").value.trim(),phone:document.getElementById("newPhone").value.trim()},"Permintaan tambah dikirim.");addForm.reset();}
+function bulkAdd(){let a=bulk.value.trim().split(/\r?\n/).map(x=>{let p=x.split("|");return{name:(p[0]||"").trim(),phone:(p[1]||"").trim()};}).filter(x=>x.name);if(!a.length)return alert("Masukkan daftar nama.");post({action:"bulkAdd",guests:a},"Permintaan tambah "+a.length+" tamu dikirim.");document.getElementById("bulk").value="";}
+function edit(id){let g=data.find(x=>x.id===id);if(!g)return;let n=prompt("Nama",g.name);if(n===null)return;let p=prompt("No. WhatsApp",g.phone||"");if(p===null)return;let s=prompt("Status: Hadir / Berhalangan / Belum Merespons",g.presence);if(s===null)return;let m=prompt("Pesan",g.message||"");if(m===null)return;post({action:"updateGuest",id,name:n.trim(),phone:p.trim(),presence:s.trim(),message:m.trim()},"Perubahan dikirim.");}
+function del(id){let g=data.find(x=>x.id===id);if(g&&confirm("Hapus "+g.name+"?"))post({action:"deleteGuest",id},"Permintaan hapus dikirim.");}
+function exportCSV(){let h=["ID","Nama","No. WhatsApp","Status RSVP","Pesan","Waktu Buka"],rows=data.map(g=>[g.id,g.name,g.phone,g.presence,g.message,g.openedAt]),csv=[h,...rows].map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n"),blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}),a=document.createElement("a"),u=URL.createObjectURL(blob);a.href=u;a.download="daftar-tamu.csv";a.click();URL.revokeObjectURL(u);}
+</script>
+									</body>
+								</html>
