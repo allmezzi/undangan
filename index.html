@@ -308,34 +308,146 @@
 
     <!-- JAVASCRIPT INTERACTIVE -->
     <script>
-        // --- 1. AMBIL NAMA TAMU DARI URL ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            // Mengambil parameter 'to' atau 'tamu' atau 'nama'
-            const guestName = urlParams.get('to') || urlParams.get('tamu') || urlParams.get('nama');
-            
-            if (guestName) {
-                // Tampilkan nama tamu pada cover
-                document.getElementById('guestNameDisplay').innerText = guestName;
-                // Isi otomatis nama di form ucapan
-                document.getElementById('guestName').value = guestName;
-            }
-        });
+        
+	// ========================================
+	// 1. IDENTITAS TAMU BERDASARKAN ID
+	// ========================================
+	
+	const GUEST_API = "https://script.google.com/macros/s/AKfycbwP5yhLPxUK8_Ue0sEw1Rs2QIBrmRnuHPvn2sWfSzBiSLEiE5BCnvVhFPRB_OdzN2OU/exec";
+	
+	let currentGuestId = "";
+	let currentGuestName = "Tamu Undangan";
+	let openingRecorded = false;
+	
+	window.addEventListener("DOMContentLoaded", function () {
+	
+	    const params = new URLSearchParams(window.location.search);
+	
+	    currentGuestId = params.get("id") || "";
+	
+	    if (!currentGuestId) {
+	        return;
+	    }
+	
+	    loadGuestInfo(currentGuestId);
+	
+	});
+	
+	
+	// ========================================
+	// 2. AMBIL NAMA TAMU DARI GOOGLE SHEETS
+	// ========================================
+	
+	function loadGuestInfo(id) {
+	
+	    const script = document.createElement("script");
+	
+	    window.__guestInfoCallback = function(response) {
+	
+	        script.remove();
+	
+	        if (!response || !response.success || !response.guest) {
+	            console.error("Data tamu tidak ditemukan.");
+	            return;
+	        }
+	
+	        currentGuestName = response.guest.name || "Tamu Undangan";
+	
+	        // Tampilkan nama di cover
+	        document.getElementById("guestNameDisplay").textContent =
+	            currentGuestName;
+	
+	        // Isi otomatis form RSVP
+	        document.getElementById("guestName").value =
+	            currentGuestName;
+	
+	    };
+	
+	    script.onerror = function() {
+	        script.remove();
+	        console.error("Gagal mengambil data tamu.");
+	    };
+	
+	    script.src =
+	        GUEST_API +
+	        "?action=guestInfo" +
+	        "&id=" + encodeURIComponent(id) +
+	        "&callback=__guestInfoCallback" +
+	        "&_=" + Date.now();
+	
+	    document.body.appendChild(script);
+	
+	}
+	
+	
+	// ========================================
+	// 3. CATAT WAKTU PERTAMA KALI DIBUKA
+	// ========================================
+	
+	function recordInvitationOpened() {
+	
+	    if (!currentGuestId || openingRecorded) {
+	        return;
+	    }
+	
+	    openingRecorded = true;
+	
+	    fetch(GUEST_API, {
+	
+	        method: "POST",
+	
+	        mode: "no-cors",
+	
+	        headers: {
+	            "Content-Type": "text/plain;charset=utf-8"
+	        },
+	
+	        body: JSON.stringify({
+	
+	            action: "markOpened",
+	
+	            id: currentGuestId
+	
+	        })
+	
+	    }).catch(function(error) {
+	
+	        openingRecorded = false;
+	
+	        console.error("Gagal mencatat waktu buka:", error);
+	
+	    });
+	
+	}
+
 
         // --- 2. BUKA UNDANGAN ---
-        function openInvitation() {
-            const cover = document.getElementById('cover');
-            const mainContent = document.getElementById('main-content');
-            const musicBtn = document.getElementById('musicBtn');
-            const music = document.getElementById('bgMusic');
+        
+		function openInvitation() {
+		
+		    // Catat waktu pembukaan undangan
+		    recordInvitationOpened();
+		
+		    const cover = document.getElementById("cover");
+		
+		    const mainContent = document.getElementById("main-content");
+		
+		    const musicBtn = document.getElementById("musicBtn");
+		
+		    const music = document.getElementById("bgMusic");
+		
+		    cover.style.transform = "translateY(-100%)";
+		
+		    mainContent.classList.remove("opacity-0");
+		
+		    musicBtn.classList.remove("hidden");
+		
+		    music.play().catch(function(error) {
+		        console.log("Audio autoplay prevented");
+		    });
+		
+		}
 
-            cover.style.transform = 'translateY(-100%)';
-            mainContent.classList.remove('opacity-0');
-            musicBtn.classList.remove('hidden');
-            
-            // Putar Musik
-            music.play().catch(e => console.log("Audio autoplay prevented"));
-        }
 
         // --- 3. TOGGLE MUSIC ---
         let isPlaying = true;
